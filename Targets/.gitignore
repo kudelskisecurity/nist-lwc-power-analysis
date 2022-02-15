@@ -1,0 +1,10 @@
+objdir-*/
+.dep/*
+*.eep
+*.elf
+*.hex
+*.lss
+*.map
+*.sym
+*.bin
+Candidates/
