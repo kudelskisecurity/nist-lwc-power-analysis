@@ -1,0 +1,10 @@
+[submodule "Tools/rainbow"]
+	path = Tools/rainbow
+	url = https://github.com/Ledger-Donjon/rainbow.git
+[submodule "Tools/lascar"]
+	path = Tools/lascar
+	url = https://github.com/Ledger-Donjon/lascar
+[submodule "Tools/chipwhisperer"]
+	path = Tools/chipwhisperer
+	url = https://github.com/newaetech/chipwhisperer.git
+	branch = master
