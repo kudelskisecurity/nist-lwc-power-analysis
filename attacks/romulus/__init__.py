@@ -24,7 +24,7 @@ def run(args):
     attack(source, verifier, args.load, args.save, args)
 
 def init_wrap():
-    # TODO - this works for benchmarks but not anything else
+    # This works for benchmarks but not anything else
     return WrappedChipWhisperer(
         alg='romulusn',
         platform='CWLITEARM',

@@ -217,7 +217,7 @@ class JumboModel(ElephantGeneric):
 
     def mask_lfsr_step(self, state):
         out = []
-        temp = rotl(state[0]) ^ ((state[3] << 7) & 0xff) ^ (state[19] >> 7) # TODO diff
+        temp = rotl(state[0]) ^ ((state[3] << 7) & 0xff) ^ (state[19] >> 7)
 
         for i in range(self.state_bytes - 1):
             out.append(state[i + 1])
@@ -229,8 +229,8 @@ class JumboModel(ElephantGeneric):
     def mask_lfsr_goback(self, state):
         out = []
 
-        rotTemp = ((state[2] << 7) & 0xff) ^ (state[18] >> 7) ^ state[21] # TODO diff
-        temp = rotr(rotTemp) # temp
+        rotTemp = ((state[2] << 7) & 0xff) ^ (state[18] >> 7) ^ state[21]
+        temp = rotr(rotTemp)
 
         out.append(temp)
         for i in range(1, self.state_bytes):
@@ -245,7 +245,7 @@ class DumboModel(ElephantGeneric):
 
     def mask_lfsr_step(self, state):
         out = []
-        temp = rotl(state[0]) ^ ((state[3] << 7) & 0xff) ^ (state[19] >> 7) # TODO diff
+        temp = rotl(state[0]) ^ ((state[3] << 7) & 0xff) ^ (state[19] >> 7)
 
         for i in range(self.state_bytes - 1):
             out.append(state[i + 1])

@@ -20,6 +20,8 @@ def attack(args, wrap=None):
     tpl_name = args.template
     tpl_name = TPL_PATH + tpl_name + ".tpl"
     num_traces = args.num_traces
+    num_identical = args.num_identical
+    keep_n = args.keep_n
     threads = args.threads if args.threads is not None else multiprocessing.cpu_count()
 
     print("Using", threads, "threads.")
@@ -31,7 +33,7 @@ def attack(args, wrap=None):
     with open(tpl_name, 'rb') as model_file:
         template_data = pickle.load(model_file)
 
-    return _do_attack(num_traces, template_data, threads, wrap)
+    return _do_attack(num_traces, num_identical, keep_n, template_data, threads, wrap)
 
 
 def _exhaustive_search(pt, nonce, ct, key_options):
@@ -61,9 +63,10 @@ def _exhaustive_search(pt, nonce, ct, key_options):
     return None, num_it
 
 
-def _do_attack(num_traces, template_data, threads, wrap=None):
+def _do_attack(num_traces, num_identical, keep_n, template_data, threads, wrap=None):
     params = template_data['params']
     all_models = template_data['templates']
+
 
     platform = params['platform']
     executable = params['executable']
@@ -101,7 +104,7 @@ def _do_attack(num_traces, template_data, threads, wrap=None):
 
     futures = []
     for i in range(8):
-        future = exec.submit(_predict, nonces.copy(), data.leakages[:,start:end].copy(), all_models.copy(), i)
+        future = exec.submit(_predict, nonces.copy(), data.leakages[:,start:end].copy(), all_models.copy(), i, num_identical, keep_n)
         futures.append(future)
 
     print()
@@ -146,7 +149,7 @@ def _do_attack(num_traces, template_data, threads, wrap=None):
         return constants.STATUS_WRONG_KEY, col_num_iter, num_it, initially_incorrect_bytes, unrecoverable_bytes
 
 
-def _predict(nonces, traces, models, col):
+def _predict(nonces, traces, models, col, num_identical=25, return_top=4):
     # Select the 2 bytes of the nonce that are used for this column
     nonces_selected = [select_column(n, col, nonce=True) for n in nonces]
 
@@ -176,23 +179,17 @@ def _predict(nonces, traces, models, col):
             for row, HW in enumerate(round1_model):
                 key_candidates_scores[key] += estimates[row][HW]
 
-
-        # Print our top 5 results so far
         argsorted = key_candidates_scores.argsort()[::-1][:16]
-        current_top = argsorted[:4]
 
-        # print("Round", j, "Top 4:", [hex(x) for x in current_top], end='')
-        if last_top is not None and current_top[0] == last_top:
+        if last_top is not None and argsorted[0] == last_top:
             identical_for += 1
-        #    print(" identical for", identical_for, "rounds")
         else:
-            last_top = current_top[0]
+            last_top = argsorted[0]
             identical_for = 0
-        #    print(" different from last")
 
-        if identical_for >= 25:
+        if identical_for >= num_identical:
             # Fast exit if we have a stable candidate
             break
 
-    return key_candidates_scores.argsort()[::-1][:4], j
+    return key_candidates_scores.argsort()[::-1][:return_top], j
 

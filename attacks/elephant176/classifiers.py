@@ -193,7 +193,7 @@ def rotr(b):
 
 def mask_lfsr_step(state):
     out = []
-    temp = rotl(state[0]) ^ ((state[3] << 7) & 0xff) ^ (state[19] >> 7) # TODO diff
+    temp = rotl(state[0]) ^ ((state[3] << 7) & 0xff) ^ (state[19] >> 7)
 
     for i in range(state_bytes - 1):
         out.append(state[i + 1])
@@ -206,7 +206,7 @@ def mask_lfsr_step(state):
 def mask_lfsr_goback(state):
     out = []
 
-    rotTemp = ((state[2] << 7) & 0xff) ^ (state[18] >> 7) ^ state[21] # TODO diff
+    rotTemp = ((state[2] << 7) & 0xff) ^ (state[18] >> 7) ^ state[21]
     temp = rotr(rotTemp) # temp
 
     out.append(temp)

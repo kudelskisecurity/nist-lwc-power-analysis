@@ -27,12 +27,16 @@ def init_subcommand(subparser: ArgumentParser):
     attack = sp2.add_parser('attack', help='launch an attack on a device using the template')
     attack.add_argument('-n', '--num-traces', dest='num_traces', type=int, default=100,
                        help='how many traces to capture to perform the attack')
+    attack.add_argument('-i', '--num-identical', dest='num_identical', type=int, default=25,
+                       help='for how many rounds a given key must remain top ranked for it to be returned')
+    attack.add_argument('-k', '--keep', dest='keep_n', type=int, default=4,
+                        help='how many top rank predictions should be returned for each column (higher improves chances of recovery at the expense of a longer exhaustive search)')
     attack.add_argument('-t', '--num-threads', dest='threads', type=int, default=None,
                        help='how many threads to use in the final step (by default: number of cores)')
 
 
 def init_wrap():
-    # TODO - this works for benchmarks but not anything else
+    # This works for benchmarks but not anything else
     return WrappedChipWhisperer(alg='photonbeetleaead128rate128v1-bitslice_sb32',
                                 platform='CWLITEARM', target_type=cw.targets.SimpleSerial,
                                 prog=cw.programmers.STM32FProgrammer)
@@ -60,7 +64,9 @@ def run_benchmark(parameters: dict[string, any], wrap) -> tuple[string, dict[str
     obj = {
         "template": parameters["template"],
         "num_traces": parameters["num_traces"],
-        "threads": parameters["threads"]
+        "threads": parameters["threads"],
+        "keep_n": 4,
+        "num_identical": 25
     }
 
     from .attack import attack
@@ -73,6 +79,7 @@ benchmark_parameters = {
     "num_traces": [100, 125, 150], # 175, 200], # 25, 50, 75, 100, 125, 150, 
     "threads": [8], # [1, 2, 4, 8],
     # "template": ["arm-sb32-10k", "arm-sb32-15k", "arm-sb32-20k", "arm-sb32-25k", "arm-sb32-30k"]
-    "template": ["stm32-30k"]
+    "template": ["stm32-30k"],
+
 }
 

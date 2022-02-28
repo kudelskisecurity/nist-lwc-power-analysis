@@ -4,6 +4,18 @@ This repository contains multiple power analysis attacks against some of the fin
 
 Running the attacks requires a ChipWhisperer Lite ARM board. One attack (on Romulus) can also work on an emulated environment.
 
+Presentation of these attacks will follow as conference papers and/or articles on our blog.
+
+**Quick access**:
+
+ - [Setup guide](#setup)
+ - [How to run the attacks](#running-the-attacks)
+   - [Attack on Elephant](#elephant)
+   - [Attack on GIFT-COFB](#gift-cofb)
+   - [Attack on Photon-BEETLE](#photon-beetle)
+   - [Attack on RomulusN](#romulusn)
+ - [Source structure](#source-code)
+
 ## Setup
 
 Some of these attacks can only be run on linux, because the binaries used to confirm encryption are compiled for linux. 
@@ -89,7 +101,7 @@ To use these attacks, you need to specify the following `<attack name>` paramete
 
 An attack on [GIFT-COFB](https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/finalist-round/updated-spec-doc/gift-cofb-spec-final.pdf) based on [an attack by Breier et al.](https://ieeexplore.ieee.org/document/8782640/).
 
-This is a differential plaintext attack assisted by side channel analysis (SCA-DPA). Our implementation has a very low success rate and is only here for completeness.
+This is a differential plaintext attack assisted by side channel analysis (SCA-DPA). Our implementation of this attack has a very low success rate.
 
 It is used by using the `gift-cofb` attack name, without additional arguments.
 
@@ -140,6 +152,8 @@ The `template name` is the name of the template you previously built. The option
 
  - `--num-traces=<num>` (default 100) changes the number of traces to capture to run the attack
  - `--num-threads=<num>` (defaults to the number of CPU cores) changes the number of parallel tasks that will be executed to search the key. A maximum of 8 threads can be used.
+ - `--num-identical=<num>` (default 25) controls the confidence of the prediction method by defining how many consecutive rounds a key prediction has to have the highest score to be returned as the correct key
+ - `--keep=<num>` (default 4) controls the number of predictions to return for each column. A higher number of predictions increases the likelihood that the exhaustive search step will recover the key, but extends the runtime of this step.
 
 ## RomulusN
 

@@ -43,7 +43,7 @@ def inverse_verify_key(mask, pt=None, nonce=None, ct=None):
     mask = mask_lfsr_goback(mask)
     key = spongent_inverse(mask)
 
-    if key[16:] == ([0] * (BLOCK_SIZE - 16)): # TODO diff
+    if key[16:] == ([0] * (BLOCK_SIZE - 16)):
         key = bytes(key[:16])
 
         if ct is not None:

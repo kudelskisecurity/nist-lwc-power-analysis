@@ -7,7 +7,7 @@ from lascar import TraceBatchContainer
 
 def capture_traces(wrap,
                    n_samples, cap_num_windows, cap_first_offset,
-                   block_size): # TODO diff
+                   block_size):
     """
     A re-implementaton of wrap.capture_traces specifically designed for the elephant attack
     :param wrap:
@@ -60,6 +60,6 @@ def capture_traces(wrap,
             while scope.adc.state: time.sleep(0.005)
 
         traces.append(trace)
-        values.append(ad[first_ad_block_size:first_ad_block_size + block_size]) # TODO diff
+        values.append(ad[first_ad_block_size:first_ad_block_size + block_size])
 
     return TraceBatchContainer(np.array(traces), np.array(values), copy=0)

@@ -43,7 +43,7 @@ def inverse_verify_key(mask, pt=None, nonce=None, ct=None):
     mask = mask_lfsr_goback(mask)
     key = spongent_inverse(mask)
 
-    if key[16:] == ([0] * (BLOCK_SIZE - 16)): # TODO diff
+    if key[16:] == ([0] * (BLOCK_SIZE - 16)):
         key = bytes(key[:16])
 
         if ct is not None:
@@ -105,8 +105,7 @@ def attack(num_traces, load_file, save_file, verbosity, verify_key=False, wrap=N
         print("[1] Capturing traces on device")
         key = random.randbytes(16)
         wrap.set_key(key)
-        # win_size, offset, sample_num = 1, 1975000, num_traces
-        win_size, offset, sample_num = 1, 987000, num_traces # TODO change
+        win_size, offset, sample_num = 1, 987000, num_traces
         captured = capture_traces(wrap, sample_num, win_size, offset, BLOCK_SIZE)
 
         if save_file is not None:

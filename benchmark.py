@@ -33,8 +33,6 @@ if __name__ == "__main__":
     _, pkg = ATTACKS[args.attack]
     project_path = f"benchmarks/{args.attack}-{args.project}.benchmark.proj"
 
-    # TODO: load existing parameter set
-
     params = pkg.benchmark_parameters
     project_data = {
         "param_names": list(params.keys()),
@@ -91,7 +89,7 @@ if __name__ == "__main__":
 
             while not returned:
                 try:
-                    start = time.perf_counter() # TODO: use other time measurement method
+                    start = time.perf_counter()
                     status, measurable = pkg.run_benchmark(params_object, wrap)
                     end = time.perf_counter()
                     returned = True
