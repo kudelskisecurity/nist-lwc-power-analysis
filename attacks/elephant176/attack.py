@@ -91,7 +91,6 @@ def exhaustive_search(pt, nonce, ct, mask):
 
 def attack(num_traces, load_file, save_file, verbosity, verify_key=False, wrap=None):
     if wrap is None and (load_file is None or verify_key):
-        input("Please connect the board and press enter.")
         wrap = init_wrap()
 
     if load_file is not None and exists(load_file):
