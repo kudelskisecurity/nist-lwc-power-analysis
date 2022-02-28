@@ -21,7 +21,7 @@ def init_subcommand(subparser: ArgumentParser):
                        help='index of the first position in the traces to keep')
     train.add_argument('-e', '--array-end', dest='array_end', type=int, default=None,
                        help='index of the first position in the traces to exclude')
-    train.add_argument('-w', '--windows', dest='windows', type=int, default=None, help='number of windows to capture')
+    train.add_argument('-w', '--windows', dest='windows', type=int, default=1, help='number of windows to capture')
 
     # attack
     attack = sp2.add_parser('attack', help='launch an attack on a device using the template')
