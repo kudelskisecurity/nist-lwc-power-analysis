@@ -46,15 +46,7 @@ The attacks in this repository rely on LASCAR, a side channel analysis tool from
 
 If not already done, initialize submodules `git submodule init` and update them `git submodule update`.
 
-Then, go to `Tools/lascar` and run `python setup.py install --user` to install LASCAR:
-
-> **Warning**: until a PR is accepted, you may need to update the `numpy` dependency in the `Tools/lascar/setup.py` file (line 39) to remove the upper bound. Update it to `"numpy>=1.17",`.
-
-```bash
-cd Tools/lascar
-python setup.py install
-cd ../..
-```
+Then, go to `Tools/lascar` and run `python setup.py install` to install LASCAR:
 
 ### Optional: compile the desired targets
 

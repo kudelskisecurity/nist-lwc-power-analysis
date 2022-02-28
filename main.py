@@ -1,13 +1,8 @@
 import argparse as argparse
 import random
-from typing import List, Tuple, Callable, NoReturn, Dict
-
 import numpy as np
 
 from util import select
-import attacks.romulus.attack as romulus
-import attacks.romulus.benchmark as romulus_benchmark
-
 from attacks import ATTACKS
 
 if __name__ == "__main__":
@@ -27,7 +22,6 @@ if __name__ == "__main__":
         desc, pkg = content
         parser = subparsers.add_parser(attack, help=desc)
         pkg.init_subcommand(parser)
-
 
     args = parse.parse_args()
 
