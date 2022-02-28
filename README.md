@@ -155,7 +155,7 @@ The `template name` is the name of the template you previously built. The option
  - `--num-identical=<num>` (default 25) controls the confidence of the prediction method by defining how many consecutive rounds a key prediction has to have the highest score to be returned as the correct key
  - `--keep=<num>` (default 4) controls the number of predictions to return for each column. A higher number of predictions increases the likelihood that the exhaustive search step will recover the key, but extends the runtime of this step.
 
-## RomulusN
+### RomulusN
 
 A correlation power analysis attack on the [Romulus](https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/finalist-round/updated-spec-doc/romulus-spec-final.pdf) cipher (more precisely, on the Romulus-N variant).
 
@@ -178,3 +178,13 @@ package. Each of them is structured as follows:
  - `__init__.py` contains some boilerplate to integrate the attacks to the tool: command line parameters specification, attack entrypoint for the command line tool, and benchmarking hooks
  - `attack.py` contains the general code of the attack
  - additional files contains the code of the model used in the attack
+
+The `Targets` folder contains the toolchain to build the targets, together with some documentation on how to build them.
+
+The `benchmark_analysis` folder contains a few scripts based on Matplotlib that generate plot for the results of the benchmarks that can be found in the `benchmarks` folder. 
+
+## Benchmarking
+
+A tool to benchmark the attacks is available in `benchmark.py`. The variables that are benchmarked can be configured in the `__init__.py` file of the attack you want to benchmark.
+
+The benchmarking tool is run with `python benchmark.py <attack name> <project name> [-n number of attempts per perameter combination]`. Benchmark results are stored in `benchmarks/<attack name>-<project name>.benchmark.proj`.
