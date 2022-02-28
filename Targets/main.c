@@ -14,6 +14,8 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    Updated by Louis Vialar for Kudelski Security (c) 2021-2022
 */
 
 #include "hal.h"
