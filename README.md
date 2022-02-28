@@ -87,7 +87,7 @@ Attacks on the [Elephant](https://csrc.nist.gov/CSRC/media/Projects/lightweight-
 
  - `--save=<name>`: save the captured traces to the `projects/<name>` project files
  - `--load=<name>`: instead of capturing traces from the ChipWhisperer, use saved traces from `projects/<name>`
- - `--num-traces=<number>`: sets the number of power traces to capture when running the attack (defaults to 50)
+ - `--num-traces=<number>` (default 50): set the number of power traces to capture when running the attack
  - `--verify-key`: if specified, the guessed key will be verified by capturing a known plaintext, ciphertext combination and executing the Elephant algorithm locally to verify that the guessed key yields the correct ciphertext.
 
 To use these attacks, you need to specify the following `<attack name>` parameter:
@@ -134,9 +134,9 @@ The mandatory arguments are:
  - `binary file` is the prefix of the binary file to run. The file must be in the `bin/` folder. Using the given prefix `<binary file>`, the board is flashed with `bin/<binary file>-{CWLITEARM|CWLITEXMEGA}.bin`, depending on the target platform.
   
 The optional parameters are:
- - `--num-traces=<num>` (default 20'000) changes the number of traces to capture to create the templates. Higher numbers require more memory but lead to more accurate templates.
- - `--windows=<num>` (default 1) changes the number of windows to capture in the power trace. A window is a set of 24'000 power samples, so increasing the number of windows to capture increases the length of the powertraces.
- - `--array-start=<num>` (default 0) and `--array-end=<num>` (default 24000) allow to select a subset of the captured power-traces to use when making the templates. This is usually not needed as point of interest are already selected in the traces.
+ - `--num-traces=<num>` (default 20'000): set the number of traces to capture to create the templates. Higher numbers require more memory but lead to more accurate templates.
+ - `--windows=<num>` (default 1): set the number of windows to capture in the power trace. A window is a set of 24'000 power samples, so increasing the number of windows to capture increases the length of the powertraces.
+ - `--array-start=<num>` (default 0) and `--array-end=<num>` (default 24000): select a subset of the captured power-traces to use when making the templates. This is usually not needed as point of interest are already selected in the traces.
 
 The program will capture the defined amount of traces then categorize them and build the model. The built model is then stored in the `attacks/photonbeetle/models` directory.
 
@@ -150,10 +150,10 @@ python main.py photon-beetle <template name> attack [optional args]
 
 The `template name` is the name of the template you previously built. The optional arguments are the following:
 
- - `--num-traces=<num>` (default 100) changes the number of traces to capture to run the attack
- - `--num-threads=<num>` (defaults to the number of CPU cores) changes the number of parallel tasks that will be executed to search the key. A maximum of 8 threads can be used.
- - `--num-identical=<num>` (default 25) controls the confidence of the prediction method by defining how many consecutive rounds a key prediction has to have the highest score to be returned as the correct key
- - `--keep=<num>` (default 4) controls the number of predictions to return for each column. A higher number of predictions increases the likelihood that the exhaustive search step will recover the key, but extends the runtime of this step.
+ - `--num-traces=<number>` (default 50): set the number of power traces to capture when running the attack
+ - `--num-threads=<num>` (defaults to the number of CPU cores): set the number of parallel tasks that will be executed to search the key. A maximum of 8 threads can be used.
+ - `--num-identical=<num>` (default 25): control the confidence of the prediction method by defining how many consecutive rounds a key prediction has to have the highest score to be returned as the correct key
+ - `--keep=<num>` (default 4): control the number of predictions to return for each column. A higher number of predictions increases the likelihood that the exhaustive search step will recover the key, but extends the runtime of this step.
 
 ### RomulusN
 
@@ -163,7 +163,7 @@ The attack name is `romulusn` and the optional parameters are:
 
  - `--save=<name>`: save the captured traces to the `projects/<name>` project files
  - `--load=<name>`: instead of capturing traces from the ChipWhisperer, use saved traces from `projects/<name>`
- - `--num-traces=<number>` (default 2000 for STM32 platform): sets the number of power traces to capture when running the attack
+ - `--num-traces=<number>` (default 2000 for STM32 platform): set the number of power traces to capture when running the attack
 
 Other arguments allow you to change the target platform type. This is not recommended.
  - `--source=<source>` (default `stm32`): choose between `xmega`, `stm32` and `emulator`. The `emulator` source is based on the Rainbow emulator, which you must install.
