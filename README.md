@@ -8,7 +8,7 @@ Running the attacks requires a ChipWhisperer Lite ARM board. One attack (on Romu
 
 Some of these attacks can only be run on linux, because the binaries used to confirm encryption are compiled for linux. 
 
-In general, these attacks have been tested only under ArchLinux with recent versions of Python3 (Python 3.9+). They should
+In general, these attacks have been tested only under ArchLinux with recent versions of Python3 (Python 3.9 and Python 3.10). They should
 work correctly with all versions of Python higher than 3.5.
 
 ### Prepare ChipWhisperer
