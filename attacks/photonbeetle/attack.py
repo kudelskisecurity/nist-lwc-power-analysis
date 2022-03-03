@@ -1,6 +1,6 @@
 import itertools
 import random
-from concurrent.futures import Executor, ThreadPoolExecutor, ProcessPoolExecutor
+from concurrent.futures import ProcessPoolExecutor
 
 import numpy as np
 from scipy.stats import multivariate_normal
