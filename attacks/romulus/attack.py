@@ -22,7 +22,7 @@ def _attack(capture, enc_oracle, enc, threshold, load_from=None, save_to=None, r
 
         container = capture()
 
-        # Compute "initial"
+        # Compute the initial state of Skinny, as it can depend on the nonce depending on the chosen attack point
         v = container.values
         new_v = []
         for index, arr in enumerate(v):
@@ -36,6 +36,7 @@ def _attack(capture, enc_oracle, enc, threshold, load_from=None, save_to=None, r
                 a1 = ad[16:]
                 iv = compute_initial_vector(a0, a1)
 
+            # set the user value to (nonce, initial vector)
             new_v.append((nonce, iv))
 
         container.values = np.array(new_v)
@@ -93,7 +94,15 @@ def _attack(capture, enc_oracle, enc, threshold, load_from=None, save_to=None, r
 
         # update first wrong key byte
         if len(wrong_elements) > 0:
-            selected_key_bytes[wrong_elements[0]] += 1
+            if wrong_elements[0] < 4:
+                for wrong_element in wrong_elements: 
+                    if wrong_element < 4: selected_key_bytes[wrong_element] += 1
+            else:
+                for wrong_element in wrong_elements: 
+                    selected_key_bytes[wrong_element] += 1
+            # selected_key_bytes[wrong_elements[0]] += 1
+            
+
             if selected_key_bytes[wrong_elements[0]] >= len(start[wrong_elements[0]]):
                 print("Cannot find a key. One byte is probably incorrect in the 8 first bytes.")
                 return None, real_key, num_iterations
