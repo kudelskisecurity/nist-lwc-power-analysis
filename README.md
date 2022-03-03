@@ -73,7 +73,7 @@ You can recompile them yourself from the source of the candidates, by following 
 All the attacks can be executed from a single tool
 
 ```bash
-python main.py [general args] <attack name> [attack args]
+./main.py [general args] <attack name> [attack args]
 ```
 
 The general arguments are the following:
@@ -98,6 +98,8 @@ To use these attacks, you need to specify the following `<attack name>` paramete
  - `elephant176` for the attack on Jumbo (Elephant-176)
  - `elephant` for a generic code that can attack both candidates
    - The additional parameter `--block-size` (set to 176 or 160) specifies the variant of the candidate to attack
+
+For example, running the Elephant-160 attack is as simple as `./main.py elephant160`.
 
 ### GIFT-COFB
 
@@ -127,7 +129,7 @@ The attack name is `photon-beetle`. The general usage is `python main.py photon-
 To create a template, you need to use the `template` mode as follows:
 
 ```bash
-python main.py photon-beetle <template name> template <platform> <binary file> [optional args]
+./main.py photon-beetle <template name> template <platform> <binary file> [optional args]
 ```
 
 The mandatory arguments are:
@@ -147,7 +149,7 @@ The program will capture the defined amount of traces then categorize them and b
 To attack using a previosuly built template, you need to use the `attack` mode as follows:
 
 ```bash
-python main.py photon-beetle <template name> attack [optional args]
+./main.py photon-beetle <template name> attack [optional args]
 ```
 
 The `template name` is the name of the template you previously built. The optional arguments are the following:
