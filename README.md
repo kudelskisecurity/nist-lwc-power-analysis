@@ -1,6 +1,8 @@
 # Power Analysis of some NIST Lightweight Candidates
 
-This repository contains multiple power analysis attacks against some of the finalists of [NIST lightweight cryptography contest](https://csrc.nist.gov/Projects/lightweight-cryptography/finalists), implemented in Python on the ChipWhisperer framework.
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-green.svg)](https://docs.python.org/3.7/whatsnew/) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
+
+This repository contains multiple power analysis attacks against some of the finalists of the [NIST lightweight cryptography contest](https://csrc.nist.gov/Projects/lightweight-cryptography/finalists), implemented in Python on the ChipWhisperer framework.
 
 Running the attacks requires a ChipWhisperer Lite ARM board. One attack (on Romulus) can also work on an emulated environment.
 
@@ -116,7 +118,7 @@ As this is a template attack, it takes place in two different steps:
 
 The first step typically requires around 30k to 40k power-traces in our case, while the second step only requires 150 power traces.
 
-We observed in our experiments that templates tend to depend on the USB plug used to make them.
+We observed in our experiments that templates tend to depend on the USB port used to make them.
 
 The attack name is `photon-beetle`. The general usage is `python main.py photon-beetle <template name> <attack|template> ...`.
 

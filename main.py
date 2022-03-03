@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import argparse as argparse
 import random
 import numpy as np
