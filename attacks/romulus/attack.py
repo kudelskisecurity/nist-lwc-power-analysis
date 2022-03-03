@@ -15,7 +15,7 @@ from util import constants
 
 
 
-def _attack(capture, enc_oracle, enc, threshold, load_from=None, save_to=None, real_key=None, thresholds=None, fail_fast=False) \
+def _attack(capture, enc_oracle, enc, threshold, load_from=None, save_to=None, real_key=None, thresholds=None, fail_fast=False, faster_first_subkey=False) \
         -> tuple[Optional[bytes], Optional[bytes], int]:
     if load_from is None:
         print("Step 1: acquire traces")
@@ -92,15 +92,18 @@ def _attack(capture, enc_oracle, enc, threshold, load_from=None, save_to=None, r
                                                            correlation_threshold=threshold, thresholds=thresholds)
         print("Done! n_wrongs=", wrong_elements)
 
-        # update first wrong key byte
         if len(wrong_elements) > 0:
-            if wrong_elements[0] < 4:
-                for wrong_element in wrong_elements: 
-                    if wrong_element < 4: selected_key_bytes[wrong_element] += 1
+            if faster_first_subkey:
+                # update wrong key byte in one quarter of the key
+                if wrong_elements[0] < 4:
+                    for wrong_element in wrong_elements: 
+                        if wrong_element < 4: selected_key_bytes[wrong_element] += 1
+                else:
+                    for wrong_element in wrong_elements: 
+                        selected_key_bytes[wrong_element] += 1
             else:
-                for wrong_element in wrong_elements: 
-                    selected_key_bytes[wrong_element] += 1
-            # selected_key_bytes[wrong_elements[0]] += 1
+                # update first wrong key byte
+                selected_key_bytes[wrong_elements[0]] += 1
             
 
             if selected_key_bytes[wrong_elements[0]] >= len(start[wrong_elements[0]]):
@@ -231,7 +234,7 @@ def attack(traces_source, verifier_enc, load_from, save_to, args, wrap=None):
         threshold = args.threshold
 
     found_key, real_key, num_iterations = _attack(capture_fn, enc_oracle_fn, enc_fn, threshold, load_from, save_to, real_key=key,
-                                  thresholds=thresholds)
+                                  thresholds=thresholds, faster_first_subkey=args.faster_first_subkey if args.faster_first_subkey is not None else False)
 
     # Has the function returned a new real key? (loaded from a previous run)
     key = real_key if real_key is not None else key

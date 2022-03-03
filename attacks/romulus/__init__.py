@@ -15,6 +15,7 @@ def init_subcommand(subparser: ArgumentParser):
     subparser.add_argument('--save', dest='save', metavar='project name', default=None, help='save the generated data, traces, oracle response')
     subparser.add_argument('--load', dest='load', metavar='project name', default=None, help='the name of a saved project to load (ignores source)')
     subparser.add_argument('-n', '--num-traces', dest='num_traces', type=int, default=None, help='override the number of traces to capture')
+    subparser.add_argument('--faster-first-subkey', dest='faster_first_subkey', action='store_const', const=True, default=False, help='use a faster but experimental method to confirm the correctness of the first half of the key')
 
 def run(args):
     source = select('What is the source of the traces?', sources) if args.interactive or args.source is None else args.source
