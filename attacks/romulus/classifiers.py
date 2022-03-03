@@ -1,26 +1,43 @@
-from .sim.romulus import lfsr, init_lfsr
-from .sim.skinny import sbox_8, RC, TWEAKEY_P
-import numpy as np
 from lascar.tools.leakage_model import hamming
 from numba import njit
-
-NP_TWEAKEY_P = np.array(TWEAKEY_P)
-sbox = np.array(sbox_8)
-NM_RC_1 = RC[1]
+from .constants import *
 
 
-def rho(a, b):
+def init_lfsr() -> []:
+    """Return a new instance of the counter LFSR"""
+    return [1, 0, 0, 0, 0, 0, 0]
+
+
+def lfsr(cnt: []):
+    """Increment the provided counter LFSR"""
+    fb0 = cnt[6] >> 7
+
+    cnt[6] = (cnt[6] << 1) | (cnt[5] >> 7)
+    cnt[5] = (cnt[5] << 1) | (cnt[4] >> 7)
+    cnt[4] = (cnt[4] << 1) | (cnt[3] >> 7)
+    cnt[3] = (cnt[3] << 1) | (cnt[2] >> 7)
+    cnt[2] = (cnt[2] << 1) | (cnt[1] >> 7)
+    cnt[1] = (cnt[1] << 1) | (cnt[0] >> 7)
+    if fb0 == 1:
+        cnt[0] = (cnt[0] << 1) ^ 0x95
+    else:
+        cnt[0] = (cnt[0] << 1)
+
+
+def xor(a, b):
+    """Computes the exclusive or between two blocks of 16 bytes"""
     s = []
     for i in range(0, 16):
         s.append(a[i] ^ b[i])
     return s
 
 
-def compute_initial_vector(ad0, ad1):
+def compute_initial_state(ad0, ad1):
+    """Computes the initial state just before adding tweakeys in the first round"""
     cnt = init_lfsr()
     lfsr(cnt)
 
-    ad = rho(ad0, ad1)
+    ad = xor(ad0, ad1)
     initial = [sbox_8[a] for a in ad]
     initial[0] ^= (RC[0] & 0xf) ^ cnt[0]
     initial[7] ^= 0x1a  # value of the 8th byte of the first Tweakey table
@@ -28,11 +45,11 @@ def compute_initial_vector(ad0, ad1):
 
     return np.array(initial)
 
-"""
-    Classifies by the output of round 1's sbox
-"""
+
+
 @njit
-def round_1_classifier(pair, guess, index) -> int:
+def round_1_model(pair, guess, index) -> int:
+    """Classifies by the output of round 1's sbox"""
     nonce, initial = pair
     # print(nonce)
     round0 = initial[index] ^ guess ^ nonce[index]
@@ -43,13 +60,13 @@ def round_1_classifier(pair, guess, index) -> int:
     return hamming(sbox[round0])
 
 
-"""
-    Classifies by the output of round 2's SBox.
-    
-    This requires knowing the first half of the key.
-"""
 @njit
-def round_2_classifier(pair, guess, index, key_four) -> int:
+def round_2_model(pair, guess, index, key_four) -> int:
+    """
+        Classifies by the output of round 2's SBox.
+
+        This requires knowing the first half of the key.
+    """
     nonce, initial = pair
     # the first row in round 2 is xor (row0, row2, row3)
     # the second row happens to be exactly row0 :D
@@ -70,7 +87,7 @@ def round_2_classifier(pair, guess, index, key_four) -> int:
 
     # we then add the round constant (only touches first column)
     if index == 0:
-        round_1_begin ^= (NM_RC_1 & 0xf)
+        round_1_begin ^= (RC[1] & 0xf)
 
     # we now add the tweakkey
     # the key bytes have been "shuffled" in the previous addkey, so we need to find where was the key byte in

@@ -7,8 +7,8 @@ import itertools
 
 from tqdm import tqdm
 
-from .classifiers import round_2_classifier, round_1_classifier, compute_initial_vector
-from .sim.skinny import TWEAKEY_P
+from .classifiers import round_2_model, round_1_model, compute_initial_state
+from .constants import NP_TWEAKEY_P
 import numpy as np
 
 from util import constants
@@ -29,12 +29,12 @@ def _attack(capture, enc_oracle, enc, threshold, load_from=None, save_to=None, r
             if len(arr) != 2:
                 # No AD, fallback
                 nonce = arr
-                iv = compute_initial_vector(np.zeros(16, np.uint8), np.zeros(16, np.uint8))
+                iv = compute_initial_state(np.zeros(16, np.uint8), np.zeros(16, np.uint8))
             else:
                 nonce, ad = arr
                 a0 = ad[:16]
                 a1 = ad[16:]
-                iv = compute_initial_vector(a0, a1)
+                iv = compute_initial_state(a0, a1)
 
             # set the user value to (nonce, initial vector)
             new_v.append((nonce, iv))
@@ -279,7 +279,7 @@ def _find_second_half_candidates(container, key_start: bytes, keep_N, correlatio
                                  bytes_to_search=range(8), thresholds=None):
     eng = [
         lascar.CpaEngine(f'cpa{byte}',
-                         lambda nonce, guess, index=byte: round_2_classifier(nonce, guess, index, key_start),
+                         lambda nonce, guess, index=byte: round_2_model(nonce, guess, index, key_start),
                          range(256))
         for byte in bytes_to_search
     ]
@@ -299,9 +299,9 @@ def _find_second_half_candidates(container, key_start: bytes, keep_N, correlatio
 
     for pos, i in enumerate(bytes_to_search):
         if pos in wrongs:
-            print("WARNING: likely wrong value for byte", i, "of the key start (affects byte", TWEAKEY_P[i],
+            print("WARNING: likely wrong value for byte", i, "of the key start (affects byte", NP_TWEAKEY_P[i],
                   "of the rest)")
-        reorder[TWEAKEY_P[i] - 8] = possible_keys[pos]
+        reorder[NP_TWEAKEY_P[i] - 8] = possible_keys[pos]
     # while -1 in reorder: reorder.remove(-1)
 
     if real_key is not None:
@@ -314,7 +314,7 @@ def _find_second_half_candidates(container, key_start: bytes, keep_N, correlatio
 def _find_first_half_candidates(container, keep_N, real_key=None, fail_fast=False):
     eng = [
         lascar.CpaEngine(f'cpa{byte}',
-                         lambda nonce, guess, index=byte: round_1_classifier(nonce, guess, index),
+                         lambda nonce, guess, index=byte: round_1_model(nonce, guess, index),
                          range(256))
         for byte in range(8)
     ]
